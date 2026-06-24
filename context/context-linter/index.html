@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Context Linter : The Agentic Toolkit</title>
+<meta name="description" content="Paste a CLAUDE.md or any agent context file and get a bloat score, token estimate, and line-referenced trim suggestions. Runs fully in your browser." />
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-2: #1e222b;
+    --ink: #e8eaed;
+    --muted: #9aa3b2;
+    --line: #2a2f3a;
+    --accent: #5b8cff;
+    --good: #3fb950;
+    --warn: #d29922;
+    --bad: #f85149;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+  }
+  a { color: var(--accent); }
+  header, main, footer { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  header { padding-top: 32px; padding-bottom: 8px; }
+  .eyebrow { color: var(--muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 6px; }
+  h1 { font-size: 30px; margin: 0 0 8px; }
+  .tagline { color: var(--muted); margin: 0 0 4px; max-width: 70ch; }
+  .privacy {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 16px 0 0; padding: 8px 12px;
+    background: rgba(63,185,80,.08); border: 1px solid rgba(63,185,80,.35);
+    border-radius: 8px; color: #9be9a8; font-size: 14px;
+  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .panel h2 { font-size: 15px; margin: 0 0 12px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+  textarea {
+    width: 100%; min-height: 320px; resize: vertical;
+    background: var(--panel-2); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 12px;
+    font-family: var(--mono); font-size: 13px; line-height: 1.45;
+  }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  .controls { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  button {
+    font: inherit; font-weight: 600; cursor: pointer;
+    border-radius: 8px; padding: 9px 16px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--ink);
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #08122e; }
+  button:hover { filter: brightness(1.08); }
+  .empty { color: var(--muted); font-size: 14px; }
+  .scorewrap { display: flex; align-items: center; gap: 18px; }
+  .gauge { width: 92px; height: 92px; flex: 0 0 auto; position: relative; }
+  .gauge svg { transform: rotate(-90deg); }
+  .gauge .num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; font-family: var(--mono); }
+  .verdict { font-weight: 600; }
+  .verdict small { display: block; color: var(--muted); font-weight: 400; font-size: 13px; margin-top: 2px; }
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
+  .stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .stat .k { color: var(--muted); font-size: 12px; }
+  .stat .v { font-family: var(--mono); font-size: 18px; font-weight: 700; }
+  table.cost { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  table.cost th, table.cost td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); }
+  table.cost th { color: var(--muted); font-weight: 600; }
+  table.cost td.r, table.cost th.r { text-align: right; font-family: var(--mono); }
+  .trim { margin-top: 16px; padding: 12px; border-radius: 8px; background: rgba(91,140,255,.08); border: 1px solid rgba(91,140,255,.35); font-size: 14px; }
+  ul.findings { list-style: none; margin: 12px 0 0; padding: 0; }
+  ul.findings li { border: 1px solid var(--line); border-left-width: 3px; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; background: var(--panel-2); }
+  ul.findings li.sev-high { border-left-color: var(--bad); }
+  ul.findings li.sev-med { border-left-color: var(--warn); }
+  ul.findings li.sev-low { border-left-color: var(--muted); }
+  .finding-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .finding-title { font-weight: 600; }
+  .lines { font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .finding-why { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .cta {
+    margin-top: 28px; padding: 20px; border-radius: 12px; text-align: center;
+    background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid var(--line);
+  }
+  .cta h2 { color: var(--ink); margin: 0 0 6px; font-size: 18px; }
+  .cta p { color: var(--muted); margin: 0 0 14px; }
+  .cta a.btn { display: inline-block; background: var(--accent); color: #08122e; font-weight: 700; text-decoration: none; padding: 11px 20px; border-radius: 8px; }
+  footer { color: var(--muted); font-size: 13px; padding: 28px 20px 40px; text-align: center; }
+  .note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <p class="eyebrow">The Agentic Toolkit : context engineering</p>
+  <h1>Context Linter</h1>
+  <p class="tagline">Paste a CLAUDE.md, a system prompt, or any agent context file. Get a bloat score, a token and cost estimate, and specific, line-referenced suggestions for what to cut.</p>
+  <span class="privacy">Your file never leaves your browser. All analysis runs locally, nothing is uploaded.</span>
+</header>
+
+<main>
+  <div class="grid">
+    <section class="panel">
+      <h2>Your context file</h2>
+      <textarea id="input" placeholder="Paste your CLAUDE.md or agent context here..." spellcheck="false"></textarea>
+      <div class="controls">
+        <button class="primary" id="analyze">Analyze</button>
+        <button id="sample">Load a messy sample</button>
+        <button id="clear">Clear</button>
+      </div>
+      <p class="note">Token counts are heuristic estimates (roughly characters / 4), not an exact tokenizer count. Treat them as a guide.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Results</h2>
+      <div id="results"><p class="empty">Paste a file and hit Analyze to see its bloat score, token cost, and trim suggestions.</p></div>
+    </section>
+  </div>
+
+  <div class="cta">
+    <h2>One new agentic-engineering tool every week</h2>
+    <p>The Context Linter is one item in The Agentic Toolkit. Temrel adds the next one, with the reasoning behind it, every issue.</p>
+    <a class="btn" href="https://spark.temrel.com/subscribe?utm_source=github&utm_medium=repo&utm_campaign=toolkit" target="_blank" rel="noopener">Subscribe to Temrel</a>
+  </div>
+</main>
+
+<footer>
+  Part of <a href="https://github.com/temrel/temrel-agentic-toolkit" target="_blank" rel="noopener">The Agentic Toolkit</a>.
+  Built by <a href="https://spark.temrel.com" target="_blank" rel="noopener">Temrel</a>. MIT licensed.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  // Approximate input prices in USD per million tokens. Rough, for guidance only.
+  var MODELS = [
+    { name: "Claude Opus", perMillion: 15.0 },
+    { name: "Claude Sonnet", perMillion: 3.0 },
+    { name: "Claude Haiku", perMillion: 0.80 }
+  ];
+
+  // A "healthy" agent context tends to sit well under a couple thousand tokens.
+  var HEALTHY_TOKENS = 1500;   // below this, size is not a problem
+  var BUSY_TOKENS = 4000;      // above this, size alone is a real concern
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function estimateTokens(text) {
+    // Simple, well-known heuristic: about 4 characters per token for English prose.
+    return Math.max(0, Math.round(text.length / 4));
+  }
+
+  function fmtUSD(n) {
+    if (n < 0.01) return "$" + n.toFixed(4);
+    if (n < 1) return "$" + n.toFixed(3);
+    return "$" + n.toFixed(2);
+  }
+
+  function fmtInt(n) { return n.toLocaleString("en-US"); }
+
+  function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+  function analyze(text) {
+    var rawLines = text.split(/\r?\n/);
+    var chars = text.length;
+    var tokens = estimateTokens(text);
+
+    var findings = [];
+    var savedTokens = 0;
+
+    // ---- Signal 1: total size vs a healthy band ----
+    var sizeScore = 0;
+    if (tokens > HEALTHY_TOKENS) {
+      var over = tokens - HEALTHY_TOKENS;
+      var span = BUSY_TOKENS - HEALTHY_TOKENS;
+      sizeScore = clamp(Math.round((over / span) * 30), 0, 30);
+      findings.push({
+        sev: tokens > BUSY_TOKENS ? "high" : "med",
+        title: "File is larger than a lean context",
+        lines: "whole file",
+        why: "About " + fmtInt(tokens) + " tokens. A healthy agent context usually sits under " + fmtInt(HEALTHY_TOKENS) +
+             ". Every token here is re-read on every turn, so trim anything the agent does not need on most tasks."
+      });
+    }
+
+    // ---- Signal 2: duplicated non-empty lines ----
+    var seen = {};
+    var dupGroups = {};
+    rawLines.forEach(function (ln, i) {
+      var key = ln.trim();
+      if (key.length < 12) return; // ignore short/structural lines
+      if (seen[key] !== undefined) {
+        if (!dupGroups[key]) dupGroups[key] = [seen[key]];
+        dupGroups[key].push(i);
+      } else {
+        seen[key] = i;
+      }
+    });
+    var dupKeys = Object.keys(dupGroups);
+    var dupLineCount = 0;
+    dupKeys.forEach(function (k) { dupLineCount += (dupGroups[k].length - 1); });
+    var dupScore = clamp(dupLineCount * 4, 0, 25);
+    if (dupKeys.length > 0) {
+      var exampleKeys = dupKeys.slice(0, 3);
+      exampleKeys.forEach(function (k) {
+        var idxs = dupGroups[k].map(function (i) { return i + 1; });
+        var dupTokens = estimateTokens(k) * (idxs.length - 1);
+        savedTokens += dupTokens;
+        findings.push({
+          sev: "med",
+          title: "Duplicated line repeated " + idxs.length + " times",
+          lines: "lines " + idxs.join(", "),
+          why: "\"" + truncate(k, 70) + "\" appears more than once. Keep one copy and delete the rest (about " + fmtInt(dupTokens) + " tokens)."
+        });
+      });
+      if (dupKeys.length > exampleKeys.length) {
+        findings.push({
+          sev: "low",
+          title: (dupKeys.length - exampleKeys.length) + " more duplicated lines",
+          lines: "various",
+          why: "Several other lines repeat. De-duplicating them recovers more tokens."
+        });
+      }
+    }
+
+    // ---- Signal 3: stale markers ----
+    var stalePatterns = [
+      { re: /\b(TODO|FIXME|XXX|HACK)\b/, label: "open work marker" },
+      { re: /\b(deprecated|obsolete|legacy|do not use|no longer)\b/i, label: "deprecation marker" },
+      { re: /\b(20(1\d|2[0-3]))\b/, label: "old date (pre-2024)" },
+      { re: /\b(temporary|temporarily|for now|placeholder|WIP|work in progress)\b/i, label: "temporary marker" }
+    ];
+    var staleHits = [];
+    rawLines.forEach(function (ln, i) {
+      for (var p = 0; p < stalePatterns.length; p++) {
+        if (stalePatterns[p].re.test(ln)) {
+          staleHits.push({ line: i + 1, label: stalePatterns[p].label, text: ln.trim() });
+          break;
+        }
+      }
+    });
+    var staleScore = clamp(staleHits.length * 5, 0, 25);
+    staleHits.slice(0, 5).forEach(function (h) {
+      savedTokens += estimateTokens(h.text);
+      findings.push({
+        sev: "med",
+        title: "Stale content (" + h.label + ")",
+        lines: "line " + h.line,
+        why: "\"" + truncate(h.text, 70) + "\" reads as out of date. Confirm it is still true or remove it: stale instructions quietly mislead the agent."
+      });
+    });
+    if (staleHits.length > 5) {
+      findings.push({
+        sev: "low",
+        title: (staleHits.length - 5) + " more stale markers",
+        lines: "various",
+        why: "Other lines contain dated or temporary language worth reviewing."
+      });
+    }
+
+    // ---- Signal 4: long preamble before the first heading ----
+    var firstHeading = -1;
+    for (var i = 0; i < rawLines.length; i++) {
+      if (/^\s*#/.test(rawLines[i])) { firstHeading = i; break; }
+    }
+    var preambleLines = firstHeading === -1 ? rawLines.length : firstHeading;
+    var nonEmptyPreamble = 0;
+    for (var j = 0; j < preambleLines; j++) { if (rawLines[j].trim()) nonEmptyPreamble++; }
+    var preambleScore = 0;
+    if (nonEmptyPreamble > 8) {
+      preambleScore = clamp((nonEmptyPreamble - 8) * 3, 0, 20);
+      findings.push({
+        sev: nonEmptyPreamble > 16 ? "high" : "med",
+        title: "Long preamble before the first heading",
+        lines: "lines 1 to " + (firstHeading === -1 ? rawLines.length : firstHeading),
+        why: nonEmptyPreamble + " lines of intro before any structure. Agents act on concrete, scannable instructions; lead with headings and move the throat-clearing out."
+      });
+    }
+
+    // ---- Signal 5: very long single lines / walls of text ----
+    var longParas = 0;
+    rawLines.forEach(function (ln, i) {
+      if (ln.length > 600) {
+        longParas++;
+        if (longParas <= 2) {
+          findings.push({
+            sev: "low",
+            title: "Very long unbroken line",
+            lines: "line " + (i + 1),
+            why: "This line is " + fmtInt(ln.length) + " characters. Break dense walls of text into bullets or short sentences so the agent can parse intent."
+          });
+        }
+      }
+    });
+
+    // ---- Compose bloat score (0 lean, 100 bloated) ----
+    var score = clamp(sizeScore + dupScore + staleScore + preambleScore + clamp(longParas * 2, 0, 8), 0, 100);
+
+    // Round projected savings; never claim to save more than we have.
+    savedTokens = Math.min(savedTokens, tokens);
+
+    if (findings.length === 0) {
+      findings.push({
+        sev: "low",
+        title: "No obvious bloat detected",
+        lines: "whole file",
+        why: "Size, duplication, stale markers, and structure all look healthy by these heuristics. Nice and lean."
+      });
+    }
+
+    return {
+      chars: chars,
+      tokens: tokens,
+      lines: rawLines.length,
+      score: score,
+      findings: findings,
+      savedTokens: savedTokens
+    };
+  }
+
+  function truncate(s, n) { return s.length > n ? s.slice(0, n - 1) + "…" : s; }
+
+  function verdictFor(score) {
+    if (score < 25) return { label: "Lean", note: "This context is in good shape.", color: "var(--good)" };
+    if (score < 55) return { label: "Some bloat", note: "Worth a trim pass.", color: "var(--warn)" };
+    return { label: "Bloated", note: "Cut hard before this costs you on every turn.", color: "var(--bad)" };
+  }
+
+  function render(result) {
+    var v = verdictFor(result.score);
+    var circ = 2 * Math.PI * 40;
+    var dash = (result.score / 100) * circ;
+
+    var costRows = MODELS.map(function (m) {
+      var cost = (result.tokens / 1e6) * m.perMillion;
+      return "<tr><td>" + m.name + "</td><td class='r'>" + fmtUSD(cost) + "</td></tr>";
+    }).join("");
+
+    var sevClass = { high: "sev-high", med: "sev-med", low: "sev-low" };
+    var findingsHtml = result.findings.map(function (f) {
+      return "<li class='" + (sevClass[f.sev] || "sev-low") + "'>" +
+        "<div class='finding-head'><span class='finding-title'>" + escapeHtml(f.title) + "</span>" +
+        "<span class='lines'>" + escapeHtml(f.lines) + "</span></div>" +
+        "<div class='finding-why'>" + escapeHtml(f.why) + "</div></li>";
+    }).join("");
+
+    var pct = result.tokens > 0 ? Math.round((result.savedTokens / result.tokens) * 100) : 0;
+    var trim = result.savedTokens > 0
+      ? "Trim summary: removing the duplicated and stale content above recovers roughly <strong>" +
+        fmtInt(result.savedTokens) + " tokens</strong> (about " + pct + "% of the file)."
+      : "Trim summary: no easy token savings detected by these heuristics. The file is already fairly tight.";
+
+    var html =
+      "<div class='scorewrap'>" +
+        "<div class='gauge'><svg width='92' height='92' viewBox='0 0 92 92'>" +
+          "<circle cx='46' cy='46' r='40' fill='none' stroke='var(--line)' stroke-width='8'/>" +
+          "<circle cx='46' cy='46' r='40' fill='none' stroke='" + v.color + "' stroke-width='8' stroke-linecap='round' " +
+            "stroke-dasharray='" + dash.toFixed(1) + " " + circ.toFixed(1) + "'/>" +
+        "</svg><div class='num'>" + result.score + "</div></div>" +
+        "<div><div class='verdict' style='color:" + v.color + "'>" + v.label +
+          "<small style='color:var(--muted)'>Bloat score " + result.score + " / 100. " + escapeHtml(v.note) + "</small></div></div>" +
+      "</div>" +
+      "<div class='stats'>" +
+        "<div class='stat'><div class='k'>Estimated tokens</div><div class='v'>" + fmtInt(result.tokens) + "</div></div>" +
+        "<div class='stat'><div class='k'>Characters</div><div class='v'>" + fmtInt(result.chars) + "</div></div>" +
+        "<div class='stat'><div class='k'>Lines</div><div class='v'>" + fmtInt(result.lines) + "</div></div>" +
+        "<div class='stat'><div class='k'>Findings</div><div class='v'>" + result.findings.length + "</div></div>" +
+      "</div>" +
+      "<table class='cost'><thead><tr><th>Approx. cost per read</th><th class='r'>Input</th></tr></thead><tbody>" +
+        costRows + "</tbody></table>" +
+      "<div class='trim'>" + trim + "</div>" +
+      "<h2 style='margin-top:20px'>Findings</h2>" +
+      "<ul class='findings'>" + findingsHtml + "</ul>";
+
+    $("results").innerHTML = html;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  var SAMPLE = [
+    "You are a helpful, friendly, capable, thoughtful, and diligent senior engineer.",
+    "You always try your best and you are very smart and you care a lot about quality.",
+    "Please read this whole document carefully before doing anything at all, thank you.",
+    "We really appreciate you taking the time. This project means a lot to the team.",
+    "Okay so anyway, here is some background about the company and our long history...",
+    "We were founded in 2017 and we have grown a lot since those early scrappy days.",
+    "",
+    "TODO: update these build instructions, they are probably out of date now.",
+    "",
+    "## Setup",
+    "Run npm install to install dependencies.",
+    "Run npm test to run the tests.",
+    "Run npm install to install dependencies.",
+    "",
+    "## Deprecated workflow (do not use)",
+    "The old Gulp pipeline from 2019 is no longer used but here it is just in case.",
+    "Temporarily, we are also keeping the legacy v1 API docs below for now.",
+    "",
+    "## Coding style",
+    "Run npm test to run the tests.",
+    "Use 2 spaces. Prefer small functions. Write tests for new behaviour."
+  ].join("\n");
+
+  $("analyze").addEventListener("click", function () {
+    var text = $("input").value;
+    if (!text.trim()) {
+      $("results").innerHTML = "<p class='empty'>Paste a file first, then hit Analyze.</p>";
+      return;
+    }
+    render(analyze(text));
+  });
+
+  $("sample").addEventListener("click", function () {
+    $("input").value = SAMPLE;
+    render(analyze(SAMPLE));
+  });
+
+  $("clear").addEventListener("click", function () {
+    $("input").value = "";
+    $("results").innerHTML = "<p class='empty'>Paste a file and hit Analyze to see its bloat score, token cost, and trim suggestions.</p>";
+  });
+})();
+</script>
+</body>
+</html>

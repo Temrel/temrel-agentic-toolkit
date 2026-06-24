@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Agentic Toolkit</title>
+<meta name="description" content="A growing, curated collection of small, practical tools and agent skills for agentic engineering: shipping real production software with AI coding agents." />
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-2: #1e222b;
+    --ink: #e8eaed; --muted: #9aa3b2; --line: #2a2f3a; --accent: #5b8cff;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.55; }
+  a { color: var(--accent); }
+  header, main, footer { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+  header { padding-top: 56px; padding-bottom: 8px; }
+  .eyebrow { color: var(--muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px; }
+  h1 { font-size: 38px; margin: 0 0 12px; }
+  .lede { color: var(--muted); font-size: 18px; max-width: 64ch; margin: 0 0 8px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+  .btn { display: inline-block; text-decoration: none; font-weight: 700; padding: 11px 20px; border-radius: 8px; border: 1px solid var(--line); }
+  .btn.primary { background: var(--accent); color: #08122e; border-color: var(--accent); }
+  .btn.ghost { background: var(--panel-2); color: var(--ink); }
+  h2.section { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin: 44px 0 14px; }
+  .elements { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 760px) { .elements { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .elements { grid-template-columns: 1fr; } }
+  .el { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .el .name { font-weight: 600; }
+  .el .desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .tools { display: grid; gap: 14px; }
+  .tool { display: flex; justify-content: space-between; gap: 16px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .tool .meta { min-width: 0; }
+  .tool .title { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
+  .tool .tag { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; margin-left: 8px; vertical-align: middle; }
+  .tool .blurb { color: var(--muted); font-size: 14px; margin: 0; }
+  .tool a.open { white-space: nowrap; }
+  .empty { color: var(--muted); font-size: 14px; }
+  footer { color: var(--muted); font-size: 13px; padding: 48px 20px 56px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <p class="eyebrow">By Temrel</p>
+  <h1>The Agentic Toolkit</h1>
+  <p class="lede">A growing, curated collection of small, practical tools and agent skills for agentic engineering: the craft of shipping real, production software with AI coding agents.</p>
+  <p class="lede">Agentic engineering has six core elements, and this toolkit is organised by all of them. One new item lands here every newsletter issue.</p>
+  <div class="cta-row">
+    <a class="btn primary" href="https://spark.temrel.com/subscribe?utm_source=github&utm_medium=repo&utm_campaign=toolkit" target="_blank" rel="noopener">Subscribe to the newsletter</a>
+    <a class="btn ghost" href="https://github.com/temrel/temrel-agentic-toolkit" target="_blank" rel="noopener">Star on GitHub</a>
+  </div>
+</header>
+
+<main>
+  <h2 class="section">Tools</h2>
+  <div class="tools">
+    <div class="tool">
+      <div class="meta">
+        <p class="title">Context Linter <span class="tag">tool</span></p>
+        <p class="blurb">Paste a CLAUDE.md or any agent context file and get a bloat score, token and cost estimate, and line-referenced trim suggestions. Runs fully in your browser, nothing is uploaded.</p>
+      </div>
+      <a class="open btn ghost" href="./context/context-linter/index.html">Open</a>
+    </div>
+  </div>
+
+  <h2 class="section">The six elements</h2>
+  <div class="elements">
+    <div class="el"><div class="name">Context engineering</div><div class="desc">Shaping what an agent knows.</div></div>
+    <div class="el"><div class="name">Tools and tool design</div><div class="desc">The functions an agent can call.</div></div>
+    <div class="el"><div class="name">Agent skills</div><div class="desc">Reusable, loadable capabilities.</div></div>
+    <div class="el"><div class="name">Evals and verification</div><div class="desc">Knowing it actually worked.</div></div>
+    <div class="el"><div class="name">Orchestration</div><div class="desc">Multi-agent and workflow control.</div></div>
+    <div class="el"><div class="name">Guardrails and security</div><div class="desc">Keeping autonomy safe to run.</div></div>
+  </div>
+</main>
+
+<footer>
+  <a href="https://github.com/temrel/temrel-agentic-toolkit" target="_blank" rel="noopener">Source on GitHub</a>
+  &nbsp;:&nbsp; <a href="https://spark.temrel.com" target="_blank" rel="noopener">Temrel newsletter</a>
+  &nbsp;:&nbsp; MIT licensed. Copyright (c) 2026 Temrel Ltd.
+</footer>
+</body>
+</html>
