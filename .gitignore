@@ -41,3 +41,6 @@ Desktop.ini
 # Coverage and test output
 coverage/
 .nyc_output/
+
+# Local Claude Code config
+.claude/

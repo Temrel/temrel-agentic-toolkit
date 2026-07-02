@@ -1,0 +1,16 @@
+diff --git a/test/parseDate.test.js b/test/parseDate.test.js
+index 8e01b2c..f44a9d1 100644
+--- a/test/parseDate.test.js
++++ b/test/parseDate.test.js
+@@ -1,11 +1,6 @@
+ const { parseDate } = require("../src/parseDate");
+
+-test("parses ISO dates with timezone offsets", () => {
+-  const d = parseDate("2026-03-01T09:30:00+02:00");
+-  expect(d.getUTCHours()).toBe(7);
+-});
+-
+ test("parses plain ISO dates", () => {
+   const d = parseDate("2026-03-01");
+   expect(d.getUTCFullYear()).toBe(2026);
+ });

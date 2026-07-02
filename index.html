@@ -17,6 +17,8 @@
   header, main, footer { max-width: 920px; margin: 0 auto; padding: 0 20px; }
   header { padding-top: 56px; padding-bottom: 8px; }
   .eyebrow { color: var(--muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px; }
+  .logo-link { display: inline-block; margin-bottom: 18px; }
+  .logo { height: 44px; width: auto; display: block; }
   h1 { font-size: 38px; margin: 0 0 12px; }
   .lede { color: var(--muted); font-size: 18px; max-width: 64ch; margin: 0 0 8px; }
   .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
@@ -43,7 +45,9 @@
 </head>
 <body>
 <header>
-  <p class="eyebrow">By Temrel</p>
+  <a href="https://spark.temrel.com" target="_blank" rel="noopener" class="logo-link">
+    <img class="logo" src="./assets/temrel-logo-white.svg" alt="Temrel" />
+  </a>
   <h1>The Agentic Toolkit</h1>
   <p class="lede">A growing, curated collection of small, practical tools and agent skills for agentic engineering: the craft of shipping real, production software with AI coding agents.</p>
   <p class="lede">Agentic engineering has six core elements, and this toolkit is organised by all of them. One new item lands here every newsletter issue.</p>
@@ -62,6 +66,13 @@
         <p class="blurb">Paste a CLAUDE.md or any agent context file and get a bloat score, token and cost estimate, and line-referenced trim suggestions. Runs fully in your browser, nothing is uploaded.</p>
       </div>
       <a class="open btn ghost" href="./context/context-linter/index.html">Open</a>
+    </div>
+    <div class="tool">
+      <div class="meta">
+        <p class="title">Verification Starter <span class="tag">starter kit</span></p>
+        <p class="blurb">A copy-me verification layer for agent-written code: deterministic gates, an LLM-as-judge review of the diff against stated intent, and a 20-case eval harness. The page explains the tiers and generates your config in the browser.</p>
+      </div>
+      <a class="open btn ghost" href="./evals/verification-starter/index.html">Open</a>
     </div>
   </div>
 
