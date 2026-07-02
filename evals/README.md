@@ -8,7 +8,7 @@ Eval harnesses, golden-output checkers, rubric-based graders, regression suites 
 
 ## Items
 
-Nothing here yet. This element is waiting for its first item.
+- [verification-starter](./verification-starter/): a copy-me verification layer for agent-written code. Deterministic gates, an LLM-as-judge diff review against stated intent, and a small eval harness that scores the judge against your recorded failures. Plus a browser page that generates your config.
 
 ## Contributing
 

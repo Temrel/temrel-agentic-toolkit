@@ -1,0 +1,11 @@
+diff --git a/src/pagination.js b/src/pagination.js
+index 5c2d1e0..9a4b7f3 100644
+--- a/src/pagination.js
++++ b/src/pagination.js
+@@ -1,5 +1,5 @@
+ function pageCount(totalItems, pageSize) {
+-  return Math.floor(totalItems / pageSize);
++  return Math.ceil(totalItems / pageSize);
+ }
+
+ module.exports = { pageCount };

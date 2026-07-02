@@ -1,0 +1,22 @@
+diff --git a/src/middleware/rateLimit.js b/src/middleware/rateLimit.js
+new file mode 100644
+index 0000000..3f1c2aa
+--- /dev/null
++++ b/src/middleware/rateLimit.js
+@@ -0,0 +1,16 @@
++const attempts = new Map();
++
++function rateLimit(req, res, next) {
++  const key = req.ip;
++  const now = Date.now();
++  const windowStart = now - 60000;
++  const recent = (attempts.get(key) || []).filter((t) => t > windowStart);
++  recent.push(now);
++  attempts.set(key, recent);
++  if (recent.length > 5) {
++    return res.status(429).json({ error: "Too many attempts" });
++  }
++  next();
++}
++
++module.exports = { rateLimit };
