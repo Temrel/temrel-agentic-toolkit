@@ -27,13 +27,36 @@ skills/
 
 The `SKILL.md` starts with YAML frontmatter holding a `name` and a one-line `description` (for model-invoked skills, the description is what an agent reads to decide whether the skill is relevant), followed by a short body of instructions.
 
-## Add a skill by copying the template
+## Invocation flags (Claude Code specific)
 
-The fastest way to start is to copy [`model-invoked/example-skill/`](./model-invoked/example-skill/), rename the folder, and edit its `SKILL.md`. Then place it under `model-invoked/` or `human-invoked/` depending on how it should be triggered. The template is intentionally minimal so you can drop in a new skill in minutes.
+The folders are the signpost; frontmatter flags are the enforcement. Claude Code supports two `SKILL.md` frontmatter fields that control who can invoke a skill:
+
+| Frontmatter | User can invoke | Model can invoke |
+| --- | --- | --- |
+| (default) | Yes | Yes |
+| `disable-model-invocation: true` | Yes | No |
+| `user-invocable: false` | No | Yes |
+
+The convention in this repo:
+
+- Skills under `human-invoked/` **must** set `disable-model-invocation: true`. This removes the skill's description from the model's context entirely, so the agent cannot trigger it on its own, but it stays available as a slash command (`/your-skill`).
+- Skills under `model-invoked/` may additionally set `user-invocable: false` if they are background knowledge that should never appear in the `/` menu. Most should leave it unset so humans can still invoke them directly.
+
+Note that these flags are **Claude Code specific**. Other harnesses (the Agent SDK, Cursor, and similar) do not honour them, so a human-invoked skill dropped into another tool may become model-invocable there. The folder placement is the portable signal of intent; the flag is what makes Claude Code actually enforce it. See the [Claude Code skills reference](https://code.claude.com/docs/en/skills) for the full frontmatter field list.
+
+## Add a skill by copying a template
+
+Copy the template that matches your invocation style, rename the folder, and edit its `SKILL.md`:
+
+- Model-invoked: copy [`model-invoked/example-skill/`](./model-invoked/example-skill/).
+- Human-invoked: copy [`human-invoked/example-command/`](./human-invoked/example-command/), which already sets `disable-model-invocation: true`.
+
+Both templates are intentionally minimal so you can drop in a new skill in minutes.
 
 ## Items
 
 - [model-invoked/example-skill](./model-invoked/example-skill/) : a stub skill and `SKILL.md` template to copy.
+- [human-invoked/example-command](./human-invoked/example-command/) : a stub slash-command skill with `disable-model-invocation: true` pre-set.
 
 ## Contributing
 
