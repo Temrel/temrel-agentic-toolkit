@@ -1,3 +1,12 @@
+<p align="center">
+  <a href="https://spark.temrel.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./assets/temrel-logo-white.svg">
+      <img src="./assets/temrel-logo-blue.svg" alt="Temrel" width="340">
+    </picture>
+  </a>
+</p>
+
 # The Agentic Toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
@@ -14,7 +23,7 @@ This is the companion asset to [Temrel](https://spark.temrel.com), a weekly news
 | --- | --- | --- |
 | [`context/`](./context/) | Context engineering | Tools for shaping what an agent knows |
 | [`tools/`](./tools/) | Tools and tool design | Tool-design helpers, MCP servers |
-| [`skills/`](./skills/) | Agent skills | Reusable Claude skills, prompt and spec packs |
+| [`skills/`](./skills/) | Agent skills | Reusable Claude skills, split by invoker: `model-invoked/` and `human-invoked/` |
 | [`evals/`](./evals/) | Evals and verification | Eval harnesses, verification utilities |
 | [`orchestration/`](./orchestration/) | Orchestration and multi-agent workflows | Multi-agent and workflow helpers |
 | [`guardrails/`](./guardrails/) | Guardrails and security | Sandboxing, approval gates, security checks |

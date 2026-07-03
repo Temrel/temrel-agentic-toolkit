@@ -8,7 +8,7 @@ Every item is a **self-contained folder** under the element directory it belongs
 
 - `context/` : context engineering
 - `tools/` : tools and tool design
-- `skills/` : agent skills
+- `skills/` : agent skills (under `model-invoked/` or `human-invoked/`, by who triggers the skill)
 - `evals/` : evals and verification
 - `orchestration/` : orchestration and multi-agent workflows
 - `guardrails/` : guardrails and security
