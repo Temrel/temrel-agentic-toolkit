@@ -1,4 +1,4 @@
-<p align="center">
+<p align="left">
   <a href="https://spark.temrel.com">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./assets/temrel-logo-white.svg">
