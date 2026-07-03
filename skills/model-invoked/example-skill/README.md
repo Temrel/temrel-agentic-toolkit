@@ -11,7 +11,7 @@
 3. Edit `SKILL.md`: set the `name` and `description` in the frontmatter, then write the body.
 4. Update this README with your skill's real what, why, and issue link.
 
-See the [skills folder convention](../README.md) for the full layout.
+See the [skills folder convention](../../README.md) for the full layout, including whether your skill belongs under `model-invoked/` or `human-invoked/`.
 
 ## Introduced in
 
