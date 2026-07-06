@@ -1,0 +1,17 @@
+{
+  "audit": {
+    "comment": "A session is flagged as likely-overkill only if it ran on an opus-tier model AND is at-or-under ALL three thresholds.",
+    "maxToolCalls": 5,
+    "maxAssistantTurns": 6,
+    "maxDurationMinutes": 10,
+    "overkillTiers": ["opus"],
+    "downgradeToModel": "claude-sonnet-5"
+  },
+  "calibrate": {
+    "comment": "Proxy thresholds for approximating the four-axis scores from observable session data. Each axis maps a metric to a 1-3 score via [scoreTwoAt, scoreThreeAt] boundaries (score 2 at >= first value, 3 at >= second).",
+    "scope": { "metric": "filesTouched", "scoreTwoAt": 2, "scoreThreeAt": 6 },
+    "novelty": { "metric": "userTurns", "scoreTwoAt": 3, "scoreThreeAt": 8 },
+    "risk": { "metric": "filesTouched", "scoreTwoAt": 1, "scoreThreeAt": 10 },
+    "iteration": { "metric": "toolCalls", "scoreTwoAt": 10, "scoreThreeAt": 40 }
+  }
+}

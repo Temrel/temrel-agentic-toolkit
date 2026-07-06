@@ -1,0 +1,2 @@
+{"type":"user","message":{"role":"user","content":"quick question"},"uuid":"u-1","timestamp":"2026-05-01T09:00:00.000Z","origin":{"kind":"human"},"sessionId":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"}
+{"type":"assistant","message":{"id":"msg_OLD","model":"claude-opus-4-8","role":"assistant","content":[{"type":"text","text":"answer"}],"usage":{"input_tokens":100,"output_tokens":50,"cache_creation_input_tokens":0,"cache_read_input_tokens":0}},"uuid":"a-1","timestamp":"2026-05-01T09:00:10.000Z","sessionId":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"}

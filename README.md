@@ -34,6 +34,7 @@ This is the companion asset to [Temrel](https://spark.temrel.com), a weekly news
 | --- | --- | --- | --- |
 | context-linter | tool | Paste a CLAUDE.md or any agent context file and get a bloat score, token estimate, and line-referenced trim suggestions. Runs fully in your browser. | [open](./context/context-linter/) |
 | verification-starter | starter kit | A copy-me verification layer for agent-written code: deterministic gates, an LLM-as-judge diff review against stated intent, and a 20-case eval harness, in dependency-free shell. Includes a browser config generator. | [open](./evals/verification-starter/) |
+| model-router | skill + tool | A skill that recommends a model tier per task by scoring scope, novelty, risk, and expected iteration — plus a read-only TypeScript CLI that calibrates the heuristic against your real Claude Code transcripts: per-model cost report, Opus-overkill audit with estimated overspend, and a habits-vs-heuristic comparison. No network calls, and dollar figures always cite the pricing file's verification date. | [skill](./skills/model-invoked/model-router/) · [cli](./tools/model-router/) |
 
 ## Star this repo
 

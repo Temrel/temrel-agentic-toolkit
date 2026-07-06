@@ -8,7 +8,7 @@ Tool-design helpers, MCP servers, schema generators, tool-description linters, a
 
 ## Items
 
-Nothing here yet. This element is waiting for its first item.
+- [model-router](./model-router/) : a read-only CLI that analyses your local Claude Code transcripts — per-model/per-session cost report, an overkill audit for Opus-tier sessions, and calibration of the [model-router skill](../skills/model-invoked/model-router/)'s routing heuristic against your real usage.
 
 ## Contributing
 

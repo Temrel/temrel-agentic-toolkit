@@ -7,3 +7,4 @@ Skills here need no invocation flags: the default (both user and model can invok
 ## Items
 
 - [example-skill](./example-skill/) : a stub skill and `SKILL.md` template to copy.
+- [model-router](./model-router/) : recommends a model tier (Haiku / Sonnet / Opus) for a task by scoring scope, novelty, risk, and expected iteration; pairs with the [model-router CLI](../../tools/model-router/) for calibration against real usage.
