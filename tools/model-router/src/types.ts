@@ -13,7 +13,7 @@ export interface UsageTotals {
 
 export interface SessionStats {
   sessionId: string;
-  /** Encoded project directory name, e.g. "-Users-ben-code-foo". */
+  /** Encoded project directory name, e.g. "-Users-you-code-foo". */
   project: string;
   filePath: string;
   /** Per-model token totals, keyed by model id. Excludes "<synthetic>". */
