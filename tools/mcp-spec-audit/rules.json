@@ -1,0 +1,285 @@
+{
+  "version": "2026-07-28-rc1",
+  "specLinks": {
+    "rc": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/",
+    "sdkBetas": "https://blog.modelcontextprotocol.io/posts/sdk-betas-2026-07-28/"
+  },
+  "rules": [
+    {
+      "id": "tasks-result-experimental",
+      "languages": ["any"],
+      "pattern": "[\"'`]tasks/result[\"'`]",
+      "severity": "breaks",
+      "message": "Uses tasks/result from the experimental 2025-11-25 Tasks API. The graduated Tasks feature has no tasks/result method.",
+      "replacement": "Migrate to the graduated Tasks lifecycle: tasks/get, tasks/update, tasks/cancel, with task handles returned by tools/call.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "tasks-list-experimental",
+      "languages": ["any"],
+      "pattern": "[\"'`]tasks/list[\"'`]",
+      "severity": "breaks",
+      "message": "Uses tasks/list from the experimental 2025-11-25 Tasks API. tasks/list is removed entirely in the 2026-07-28 revision because it cannot be scoped safely without sessions.",
+      "replacement": "Track task IDs on the requestor side and poll them individually with tasks/get.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "tasks-status-notification-experimental",
+      "languages": ["any"],
+      "pattern": "notifications/tasks/status",
+      "severity": "breaks",
+      "message": "Uses the notifications/tasks/status notification from the experimental 2025-11-25 Tasks API.",
+      "replacement": "Migrate to the graduated Tasks lifecycle: poll with tasks/get and receive updates via tasks/update.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "create-task-result-experimental",
+      "languages": ["any"],
+      "pattern": "\\bCreateTaskResult\\b",
+      "severity": "breaks",
+      "message": "References the CreateTaskResult type from the experimental 2025-11-25 Tasks API.",
+      "replacement": "Migrate to the graduated Tasks feature, where tools/call returns task handles directly.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "related-task-meta-experimental",
+      "languages": ["any"],
+      "pattern": "io\\.modelcontextprotocol/related-task",
+      "severity": "breaks",
+      "message": "Uses the io.modelcontextprotocol/related-task _meta key from the experimental 2025-11-25 Tasks API.",
+      "replacement": "Migrate to the graduated Tasks lifecycle (tasks/get, tasks/update, tasks/cancel).",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "model-immediate-response-experimental",
+      "languages": ["any"],
+      "pattern": "io\\.modelcontextprotocol/model-immediate-response",
+      "severity": "breaks",
+      "message": "Uses the provisional io.modelcontextprotocol/model-immediate-response _meta key from the experimental 2025-11-25 Tasks API.",
+      "replacement": "Migrate to the graduated Tasks lifecycle, which formalizes immediate results on tools/call.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "task-support-experimental",
+      "languages": ["any"],
+      "pattern": "\\btaskSupport\\b",
+      "severity": "breaks",
+      "message": "References the execution.taskSupport tool declaration from the experimental 2025-11-25 Tasks API.",
+      "replacement": "Re-declare task capability using the graduated Tasks extension and verify the field against the 2026-07-28 schema.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "roots-protocol-deprecated",
+      "languages": ["any"],
+      "pattern": "\\broots/list",
+      "severity": "deprecated",
+      "message": "Uses the Roots feature (roots/list or notifications/roots/list_changed), deprecated in the 2026-07-28 revision with a 12-month window.",
+      "replacement": "Pass paths or scope explicitly via tool parameters, resource URIs, or server configuration.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "roots-sdk-python-deprecated",
+      "languages": ["python"],
+      "pattern": "\\.list_roots\\s*\\(",
+      "severity": "deprecated",
+      "message": "Calls list_roots(), part of the deprecated Roots feature (12-month window).",
+      "replacement": "Pass paths or scope explicitly via tool parameters or server configuration.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "roots-sdk-ts-deprecated",
+      "languages": ["typescript"],
+      "pattern": "\\.listRoots\\s*\\(",
+      "severity": "deprecated",
+      "message": "Calls listRoots(), part of the deprecated Roots feature (12-month window).",
+      "replacement": "Pass paths or scope explicitly via tool parameters or server configuration.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "sampling-protocol-deprecated",
+      "languages": ["any"],
+      "pattern": "sampling/createMessage",
+      "severity": "deprecated",
+      "message": "Uses the Sampling feature (sampling/createMessage), deprecated in the 2026-07-28 revision with a 12-month window.",
+      "replacement": "Call your LLM provider's API directly from the server instead of sampling through the client.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "sampling-sdk-python-deprecated",
+      "languages": ["python"],
+      "pattern": "\\.create_message\\s*\\(",
+      "severity": "deprecated",
+      "message": "Calls create_message(). If this is MCP sampling through the client session, it is deprecated (12-month window).",
+      "replacement": "Call your LLM provider's API directly from the server.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "sampling-sdk-ts-deprecated",
+      "languages": ["typescript"],
+      "pattern": "\\.createMessage\\s*\\(",
+      "severity": "deprecated",
+      "message": "Calls createMessage(). If this is MCP sampling through the client, it is deprecated (12-month window).",
+      "replacement": "Call your LLM provider's API directly from the server.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "logging-setlevel-deprecated",
+      "languages": ["any"],
+      "pattern": "logging/setLevel",
+      "severity": "deprecated",
+      "message": "Uses protocol-level Logging (logging/setLevel), deprecated in the 2026-07-28 revision with a 12-month window.",
+      "replacement": "Log to stderr for stdio transports, or emit structured telemetry via OpenTelemetry.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "logging-notification-deprecated",
+      "languages": ["any"],
+      "pattern": "[\"'`]notifications/message[\"'`]",
+      "severity": "deprecated",
+      "message": "Uses the protocol-level log notification (notifications/message), deprecated in the 2026-07-28 revision with a 12-month window.",
+      "replacement": "Log to stderr for stdio transports, or emit structured telemetry via OpenTelemetry.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "logging-sdk-python-deprecated",
+      "languages": ["python"],
+      "pattern": "send_log_message",
+      "severity": "deprecated",
+      "message": "Calls send_log_message(), part of deprecated protocol-level Logging (12-month window).",
+      "replacement": "Log to stderr for stdio transports, or emit structured telemetry via OpenTelemetry.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "logging-sdk-ts-deprecated",
+      "languages": ["typescript"],
+      "pattern": "sendLoggingMessage",
+      "severity": "deprecated",
+      "message": "Calls sendLoggingMessage(), part of deprecated protocol-level Logging (12-month window).",
+      "replacement": "Log to stderr for stdio transports, or emit structured telemetry via OpenTelemetry.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/"
+    },
+    {
+      "id": "session-id-header",
+      "languages": ["any"],
+      "pattern": "mcp-session-id",
+      "flags": "i",
+      "severity": "advisory",
+      "message": "References the Mcp-Session-Id header. Protocol-level sessions are removed in the 2026-07-28 revision; any request can land on any server instance.",
+      "replacement": "Remove session handling; carry state in explicit handles passed as tool arguments.",
+      "specLink": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2567"
+    },
+    {
+      "id": "session-id-generator-ts",
+      "languages": ["typescript"],
+      "pattern": "\\bsessionIdGenerator\\b",
+      "severity": "advisory",
+      "message": "Configures sessionIdGenerator on the Streamable HTTP transport. Protocol-level sessions are removed in the 2026-07-28 revision.",
+      "replacement": "Run the transport stateless; carry state in explicit handles passed as tool arguments.",
+      "specLink": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2567"
+    },
+    {
+      "id": "initialize-handshake-ts",
+      "languages": ["typescript"],
+      "pattern": "\\boninitialized\\b|\\bInitializeRequestSchema\\b|\\bInitializedNotificationSchema\\b",
+      "severity": "advisory",
+      "message": "Hooks the initialize handshake. The 2026-07-28 revision removes the handshake; protocol version, client info, and capabilities travel in _meta on every request.",
+      "replacement": "Read client info and capabilities from request _meta instead of an initialize hook.",
+      "specLink": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2575"
+    },
+    {
+      "id": "initialize-handshake-python",
+      "languages": ["python"],
+      "pattern": "\\bInitializationOptions\\b|create_initialization_options",
+      "severity": "advisory",
+      "message": "Uses initialize handshake options. The 2026-07-28 revision removes the handshake; protocol version, client info, and capabilities travel in _meta on every request.",
+      "replacement": "Read client info and capabilities from request _meta instead of initialization options.",
+      "specLink": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2575"
+    },
+    {
+      "id": "sticky-sessions",
+      "languages": ["any"],
+      "pattern": "sticky[_-]?sessions?|session[_-]?affinity|sessionAffinity",
+      "flags": "i",
+      "severity": "advisory",
+      "message": "Sticky-session routing detected. The 2026-07-28 revision makes sticky routing unnecessary: any MCP request can land on any server instance.",
+      "replacement": "Drop session affinity from the deployment once the server is stateless.",
+      "specLink": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2567"
+    },
+    {
+      "id": "shared-session-store",
+      "languages": ["any"],
+      "pattern": "session[_-]?store",
+      "flags": "i",
+      "severity": "advisory",
+      "message": "Session store detected. If this holds MCP protocol session state, it is unnecessary under the 2026-07-28 revision.",
+      "replacement": "Carry state in explicit handles passed as tool arguments; application-level stores keyed by those handles are fine.",
+      "specLink": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2567"
+    },
+    {
+      "id": "legacy-auth-api-key",
+      "languages": ["any"],
+      "pattern": "x-api-key",
+      "flags": "i",
+      "severity": "advisory",
+      "message": "API-key header auth detected. The 2026-07-28 revision mandates OAuth 2.1 alignment for HTTP transports, including issuer validation per RFC 9207.",
+      "replacement": "Adopt the OAuth 2.1 authorization flow described in the 2026-07-28 spec.",
+      "specLink": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2468"
+    },
+    {
+      "id": "fastmcp-import-python",
+      "languages": ["python"],
+      "pattern": "mcp\\.server\\.fastmcp",
+      "severity": "advisory",
+      "message": "Imports from mcp.server.fastmcp. Python SDK v2 renames FastMCP to MCPServer and drops the old import path entirely.",
+      "replacement": "Use: from mcp.server import MCPServer. The decorator API carries over.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/sdk-betas-2026-07-28/"
+    },
+    {
+      "id": "cjs-require-ts-sdk",
+      "languages": ["typescript"],
+      "pattern": "require\\s*\\(\\s*[\"']@modelcontextprotocol/sdk",
+      "severity": "advisory",
+      "message": "CommonJS require() of the TypeScript SDK. SDK v2 is ESM-only and runs on Node.js 20+, Bun, and Deno.",
+      "replacement": "Convert the module to ESM and import from the focused v2 packages (@modelcontextprotocol/server or @modelcontextprotocol/client).",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/sdk-betas-2026-07-28/"
+    },
+    {
+      "id": "monolithic-ts-sdk-import",
+      "languages": ["typescript"],
+      "pattern": "(from\\s+|import\\s*\\(\\s*)[\"']@modelcontextprotocol/sdk",
+      "severity": "advisory",
+      "message": "Imports the monolithic @modelcontextprotocol/sdk package. SDK v2 retires it in favor of focused packages.",
+      "replacement": "Import from @modelcontextprotocol/server (servers) or @modelcontextprotocol/client (clients), plus the transport adapter you need.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/sdk-betas-2026-07-28/"
+    },
+    {
+      "id": "monolithic-ts-sdk-dependency",
+      "languages": ["any"],
+      "fileName": "package.json",
+      "pattern": "\"@modelcontextprotocol/sdk\"\\s*:",
+      "severity": "advisory",
+      "message": "package.json depends on the monolithic @modelcontextprotocol/sdk package, retired in SDK v2.",
+      "replacement": "Depend on @modelcontextprotocol/server or @modelcontextprotocol/client instead.",
+      "specLink": "https://blog.modelcontextprotocol.io/posts/sdk-betas-2026-07-28/"
+    },
+    {
+      "id": "uncached-tools-list-ts",
+      "languages": ["typescript"],
+      "pattern": "\\.listTools\\s*\\(",
+      "severity": "advisory",
+      "message": "Client calls listTools(). In the 2026-07-28 revision, tools/list results carry ttlMs and cacheScope; clients can cache instead of re-fetching.",
+      "replacement": "Cache the tools/list result and honor its ttlMs and cacheScope fields.",
+      "specLink": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2549"
+    },
+    {
+      "id": "uncached-tools-list-python",
+      "languages": ["python"],
+      "pattern": "(session|client)\\.list_tools\\s*\\(",
+      "flags": "i",
+      "severity": "advisory",
+      "message": "Client calls list_tools(). In the 2026-07-28 revision, tools/list results carry ttlMs and cacheScope; clients can cache instead of re-fetching.",
+      "replacement": "Cache the tools/list result and honor its ttlMs and cacheScope fields.",
+      "specLink": "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2549"
+    }
+  ]
+}

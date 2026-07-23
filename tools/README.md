@@ -9,6 +9,7 @@ Tool-design helpers, MCP servers, schema generators, tool-description linters, a
 ## Items
 
 - [model-router](./model-router/) : a read-only CLI that analyses your local Claude Code transcripts — per-model/per-session cost report, an overkill audit for Opus-tier sessions, and calibration of the [model-router skill](../skills/model-invoked/model-router/)'s routing heuristic against your real usage.
+- [mcp-spec-audit](./mcp-spec-audit/) : a static scanner that audits an MCP server codebase ahead of the MCP 2026-07-28 stateless spec revision and emits a migration checklist grouped by severity; pairs with the [mcp-spec-audit skill](../skills/model-invoked/mcp-spec-audit/) so an agent can run the audit and summarize it.
 
 ## Contributing
 

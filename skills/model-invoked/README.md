@@ -8,3 +8,4 @@ Skills here need no invocation flags: the default (both user and model can invok
 
 - [example-skill](./example-skill/) : a stub skill and `SKILL.md` template to copy.
 - [model-router](./model-router/) : recommends a model tier (Haiku / Sonnet / Opus) for a task by scoring scope, novelty, risk, and expected iteration; pairs with the [model-router CLI](../../tools/model-router/) for calibration against real usage.
+- [mcp-spec-audit](./mcp-spec-audit/) : runs the [mcp-spec-audit CLI](../../tools/mcp-spec-audit/) over an MCP server codebase and summarizes the migration findings for the MCP 2026-07-28 stateless spec revision.

@@ -1,0 +1,31 @@
+{
+  "name": "mcp-spec-audit",
+  "version": "0.1.0",
+  "description": "Static scanner that audits an MCP server codebase ahead of the MCP 2026-07-28 stateless spec revision and emits a migration checklist.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "mcp-spec-audit": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "rules.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.1.0"
+  }
+}
