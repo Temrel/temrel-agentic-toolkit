@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "prod-db": {
+      "type": "http",
+      "url": "https://mcp.example.com/db"
+    },
+    "local-notes": {
+      "command": "node",
+      "args": ["notes-server.js"]
+    }
+  }
+}
