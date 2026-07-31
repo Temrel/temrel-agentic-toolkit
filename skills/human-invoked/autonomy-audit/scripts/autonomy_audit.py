@@ -674,6 +674,11 @@ def main(argv=None) -> int:
                     help="override the ~/.claude.json path (MCP servers)")
     args = ap.parse_args(argv)
 
+    if not os.path.isdir(args.project):
+        print(f"autonomy-audit: scan failed: project path is not a "
+              f"directory: {args.project}", file=sys.stderr)
+        return 2
+
     try:
         result = audit(
             args.project,

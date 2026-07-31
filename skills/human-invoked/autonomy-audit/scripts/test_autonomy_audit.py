@@ -3,9 +3,12 @@
 Run from this directory:  python3 -m unittest test_autonomy_audit -v
 """
 
+import io
 import json
 import os
+import tempfile
 import unittest
+from contextlib import redirect_stderr
 
 import autonomy_audit as aa
 
@@ -101,6 +104,15 @@ class TestEndToEnd(unittest.TestCase):
         self.assertIn("## Inventory", report)
         self.assertIn("## Suggested changes", report)
         self.assertIn("```diff", report)
+
+    def test_nonexistent_project_path_fails_without_writing_report(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = os.path.join(tmp, "autonomy-audit.md")
+            with redirect_stderr(io.StringIO()) as stderr:
+                code = aa.main(["/nonexistent/path/to/repo", "--out", out])
+            self.assertEqual(code, 2)
+            self.assertIn("not a directory", stderr.getvalue())
+            self.assertFalse(os.path.exists(out))
 
 
 if __name__ == "__main__":

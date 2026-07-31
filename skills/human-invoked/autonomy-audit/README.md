@@ -22,13 +22,16 @@ mkdir -p /path/to/your-repo/.claude/skills
 cp -r temrel-agentic-toolkit/skills/human-invoked/autonomy-audit /path/to/your-repo/.claude/skills/
 ```
 
-Or globally: `cp -r ... ~/.claude/skills/`. The folder must contain `SKILL.md` directly. The script can also be run standalone, no agent required:
+Or globally: `cp -r ... ~/.claude/skills/`. The folder must contain `SKILL.md` directly. The script can also be run standalone, no agent required. Run it from the project you want audited (the report, `autonomy-audit.md`, is written to the cwd) and invoke the script by its installed path:
 
 ```sh
-python3 scripts/autonomy_audit.py            # audit cwd + user scope
-python3 scripts/autonomy_audit.py /some/repo # audit another project
-python3 scripts/autonomy_audit.py --no-user  # project scope only
+cd /path/to/project-to-audit
+python3 ~/.claude/skills/autonomy-audit/scripts/autonomy_audit.py             # audit this project + user scope
+python3 ~/.claude/skills/autonomy-audit/scripts/autonomy_audit.py --no-user   # project scope only
+python3 ~/.claude/skills/autonomy-audit/scripts/autonomy_audit.py /other/repo # audit another project (report still lands in cwd)
 ```
+
+A nonexistent project path fails with exit 2 rather than producing a report about nothing.
 
 Exit code 1 means changes are recommended, so it doubles as a CI check on repos that ship agent config.
 
